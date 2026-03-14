@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formalicemos esto Liz</title>
+  <style>
+    :root {
+      --bg-1: #f6efe6;
+      --bg-2: #eadfce;
+      --bg-3: #d8c3a5;
+      --card: rgba(255, 248, 240, 0.82);
+      --text: #5b4636;
+      --accent: #b07d62;
+      --accent-dark: #8f624b;
+      --white: #fffdf9;
+      --shadow: 0 12px 30px rgba(110, 84, 64, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.7), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.5), transparent 20%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    .floating-hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -40px;
+      font-size: 18px;
+      opacity: 0.25;
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.25;
+      }
+      100% {
+        transform: translateY(-115vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      width: min(900px, 95%);
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 40px 28px;
+      text-align: center;
+    }
+
+    .intro-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin-bottom: 14px;
+      color: var(--accent-dark);
+    }
+
+    .subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      line-height: 1.7;
+      max-width: 750px;
+      margin: 0 auto 22px;
+    }
+
+    .small {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-top: 8px;
+    }
+
+    .scroll-btn {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 14px 24px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 0.25s ease, background 0.25s ease;
+    }
+
+    .scroll-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    .section h2 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--accent-dark);
+      margin-bottom: 18px;
+    }
+
+    .section p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.9;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .highlight {
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+
+    .question-card {
+      position: relative;
+      min-height: 560px;
+      overflow: hidden;
+    }
+
+    .question-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 12px;
+      color: var(--accent-dark);
+    }
+
+    .question-sub {
+      margin-bottom: 28px;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    .btn-area {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      margin-top: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.3);
+      border: 1px dashed rgba(176, 125, 98, 0.4);
+      overflow: hidden;
+    }
+
+    .yes-btn, .no-btn {
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease;
+      position: absolute;
+      user-select: none;
+    }
+
+    .yes-btn {
+      left: 50%;
+      top: 55%;
+      transform: translate(-50%, -50%);
+      padding: 22px 54px;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      border-radius: 999px;
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 10px 24px rgba(176, 125, 98, 0.35);
+      z-index: 2;
+    }
+
+    .yes-btn:hover {
+      transform: translate(-50%, -52%) scale(1.03);
+      background: var(--accent-dark);
+    }
+
+    .no-btn {
+      left: 70%;
+      top: 28%;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      border-radius: 999px;
+      background: #f4e6d7;
+      color: var(--text);
+      border: 1px solid rgba(143, 98, 75, 0.25);
+      z-index: 3;
+    }
+
+    .final-message {
+      display: none;
+      margin-top: 28px;
+      padding: 24px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.55);
+      animation: fadeIn 0.8s ease;
+    }
+
+    .final-message h3 {
+      font-size: 1.8rem;
+      margin-bottom: 14px;
+      color: var(--accent-dark);
+    }
+
+    .final-message p {
+      font-size: 1.08rem;
+      line-height: 1.9;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      font-size: 0.92rem;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+      .card {
+        padding: 28px 18px;
+      }
+
+      .btn-area {
+        height: 260px;
+      }
+
+      .yes-btn {
+        padding: 18px 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-hearts" id="hearts"></div>
+
+  <!-- INTRO -->
+  <section class="section">
+    <div class="card">
+      <h1 class="intro-title">Para ti, con muchísimo cariño 💐</h1>
+      <p class="subtitle">
+        Hay algo muy especial que quiero decirte, pero no quería hacerlo de una forma cualquiera.
+        Quería que fuera algo bonito, algo que pudieras leer poquito a poquito,
+        como cuando una emoción se va sintiendo cada vez más fuerte.
+      </p>
+      <p class="small">
+        Sigue bajando... porque al final hay una pregunta muy importante para ti 🤍
+      </p>
+      <a href="#slide1" class="scroll-btn">Comenzar</a>
+    </div>
+  </section>
+
+  <!-- SLIDE 1 -->
+  <section class="section" id="slide1">
+    <div class="card">
+      <h2>Desde hace tiempo...</h2>
+      <p>
+        Desde hace tiempo has logrado ocupar un lugar muy especial en mí.
+        Me encanta la forma en que me haces sentir, la tranquilidad que transmites
+        y la felicidad tan bonita que aparece cuando pienso en ti.
+      </p>
+      <a href="#slide2" class="scroll-btn">Seguir leyendo</a>
+    </div>
+  </section>
+
+  <!-- SLIDE 2 -->
+  <section class="section" id="slide2">
+    <div class="card">
+      <h2>No quería que fuera cualquier día</h2>
+      <p>
+        Quería escoger una fecha que tuviera un significado bonito para mí,
+        algo que no fuera casualidad, sino una decisión con intención,
+        con sentimiento, y con esa emoción de hacer algo especial por ti.
+      </p>
+      <a href="#slide3" class="scroll-btn">Seguir</a>
+    </div>
+  </section>
+
+  <!-- SLIDE 3 -->
+  <section class="section" id="slide3">
+    <div class="card">
+      <h2>Por eso elegí el 14 de marzo</h2>
+      <p>
+        Aunque ese día no podré verte en persona,
+        no quería dejar pasar la oportunidad de hacerte saber lo que siento.
+        A veces el momento perfecto no es cuando todo coincide,
+        sino cuando el corazón simplemente sabe que <span class="highlight">ya es el momento</span>.
+      </p>
+      <a href="#slide4" class="scroll-btn">Hay algo más...</a>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 -->
+  <section class="section" id="slide4">
+    <div class="card">
+      <h2>Y hoy quiero preguntarte algo...</h2>
+      <p>
+        Tal vez no pueda estar ahí exactamente a esa hora,
+        pero sí quiero que sientas todo el cariño, la intención
+        y lo especial que es para mí hacerte esta pregunta.
+      </p>
+      <a href="#question" class="scroll-btn">Ir a la pregunta</a>
+    </div>
+  </section>
+
+  <!-- FINAL QUESTION -->
+  <section class="section" id="question">
+    <div class="card question-card">
+      <h2 class="question-title">¿Quieres ser mi novia? 💖</h2>
+      <p class="question-sub">
+        Piénsalo bien... aunque sinceramente el botón correcto está clarísimo 😌
+      </p>
+
+      <div class="btn-area" id="btnArea">
+        <button class="yes-btn" id="yesBtn">Sí 💘</button>
+        <button class="no-btn" id="noBtn">No</button>
+      </div>
+
+      <div class="final-message" id="finalMessage">
+        <h3>Sabía que este momento valía muchísimo la pena 🤍</h3>
+        <p>
+          Elegí el <strong>14 de marzo</strong> porque no quería que esta fecha fuera solamente un día más.
+          Quería convertirla en un recuerdo bonito entre nosotros, uno que siempre nos hiciera sonreír.
+          Aunque no pueda verte ese día en el momento exacto, quería hacerte llegar algo de mí desde temprano,
+          para que supieras lo especial que eres y lo mucho que significas para mí.
+          <br><br>
+          Gracias por estar aquí, por leer esto, por hacerme sentir tantas cosas lindas,
+          y por regalarme la oportunidad de preguntarte algo que nace completamente de mi corazón:
+          <strong>quiero compartir contigo algo bonito, sincero y especial</strong>.
+          <br><br>
+          Hoy solo quiero decirte que me haces muy feliz... y que me encantaría vivir esta historia contigo. 💐✨
+        </p>
+        <div class="footer-note">Con mucho cariño, para alguien muy especial 💞</div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Corazones flotantes
+    const heartsContainer = document.getElementById("hearts");
+    const heartSymbols = ["🤍", "💖", "💐", "✨"];
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (8 + Math.random() * 8) + "s";
+      heart.style.fontSize = (14 + Math.random() * 16) + "px";
+      heartsContainer.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 16000);
+    }
+
+    setInterval(createHeart, 550);
+
+    // Botón "No" que se mueve
+    const noBtn = document.getElementById("noBtn");
+    const btnArea = document.getElementById("btnArea");
+    const yesBtn = document.getElementById("yesBtn");
+    const finalMessage = document.getElementById("finalMessage");
+
+    function moveNoButton() {
+      const areaRect = btnArea.getBoundingClientRect();
+      const btnWidth = noBtn.offsetWidth;
+      const btnHeight = noBtn.offsetHeight;
+
+      const maxX = areaRect.width - btnWidth - 10;
+      const maxY = areaRect.height - btnHeight - 10;
+
+      const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+      const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+
+      noBtn.style.left = randomX + "px";
+      noBtn.style.top = randomY + "px";
+    }
+
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    // También se mueve en móvil al tocarlo
+    noBtn.addEventListener("touchstart", function(e) {
+      e.preventDefault();
+      moveNoButton();
+    }, { passive: false });
+
+    // Acción del botón Sí
+    yesBtn.addEventListener("click", function() {
+      finalMessage.style.display = "block";
+      finalMessage.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      // opcional: esconder botones después de aceptar
+      noBtn.style.display = "none";
+      yesBtn.textContent = "Te adoro 💖";
+    });
+  </script>
+</body>
+</html>
